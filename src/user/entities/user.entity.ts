@@ -1,21 +1,33 @@
+import { Subscription } from "rxjs";
+import { Profile } from "src/profile/entities/profile.entity";
 import { Role } from "src/role/entities/role.entity";
-import { Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Transaction } from "src/transaction/entities/transaction.entity";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    user_id: number;
-
-    @Column()
-    name: string;
+    @PrimaryGeneratedColumn('uuid')
+    user_id: string;
 
     @Column()
     email: string;
 
-    @Column({
-        // type: 'enum',
-        // enum: Role,
-        // default: Role.student
-    })
-    role: string;
+    @Column()
+    contact: string;
+
+    @Column()
+    password: string;
+
+    @OneToOne(() => Profile, profile => profile.user, { cascade: true })
+    @JoinColumn()
+    profile: Profile;
+
+    @ManyToOne(() => Role, role => role.users)
+    role: Role;
+
+    @OneToMany(() => Subscription, subscription => subscription.user)
+    subscriptions: Subscription[];
+
+    @OneToMany(() => Transaction, transaction => transaction.user)
+    transactions: Transaction[];
 }

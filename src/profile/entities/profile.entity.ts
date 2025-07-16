@@ -1,14 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/user/entities/user.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
 export class Profile {
     @PrimaryGeneratedColumn()
     profile_id: number;
+
     @Column()
     user_id: number;
+
     @Column()
-    profile_picture: string; // URL or path to the profile picture
+    profile_picture: string; 
+
     @Column()
     bio: string; 
+
+    @OneToOne(() => User, user => user.profile)
+    user: User;
 }
